@@ -8,8 +8,6 @@ El [Issue](https://issues.apache.org/jira/browse/STORM-284 "Issue") seleccionado
 
 La topología de este experimento consiste en recoger streams de dos fuentes, tanto de un archivo de texto, como del api de Twitter, para así replicar el problema del Issue.
 
-Esta solución utiliza aspectos para manejar la cola de entrada antes de que la misma llegue al metodo execute(tuple) del SplitterBolt y manejar una prioridad para los streams que van llegando al mismo
-
 Actualmente este repositorio esta hecho para ser corrido en modo local, y así facilitar las pruebas
 
 Este repositorio contiene todo lo relacionado al proyecto: 
