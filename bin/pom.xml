@@ -1,0 +1,258 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.autentia.tutoriales</groupId>
+	<artifactId>storm-word-count</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<developers>
+		<developer>
+			<name>Juan Alonso Ramos</name>
+			<email>jalonso@autentia.com</email>
+			<organizationUrl>www.autentia.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.7</java.version>
+		<xtext-version>2.10.0</xtext-version>
+		<jre-version>1.8</jre-version>
+		<aspectj.version>1.8.9</aspectj.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${jre-version}</source>
+                    <target>${jre-version}</target>
+                    <!-- IMPORTANT -->
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                </configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.12</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/main/generated-sources</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>aspectj-maven-plugin</artifactId>
+			    <version>1.8</version>
+			    <configuration>
+				    <source>${jre-version}</source>
+				    <target>${jre-version}</target>
+				    <complianceLevel>${jre-version}</complianceLevel>
+			    </configuration>
+			    <executions>
+			        <execution>
+			        	<phase>process-sources</phase>
+			            <goals>
+			                <goal>compile</goal>
+			                <!-- use this goal to weave all your main classes -->
+			                <goal>test-compile</goal>
+			                <!-- use this goal to weave all your test classes -->
+			            </goals>
+			        </execution>
+			    </executions>
+			    	<dependencies>
+						<dependency>
+							<groupId>org.aspectj</groupId>
+							<artifactId>aspectjtools</artifactId>
+							<version>${aspectj.version}</version>
+						</dependency>
+					</dependencies>
+			</plugin>
+			
+			
+			<plugin>
+		    <groupId>com.jolira</groupId>
+		    <artifactId>onejar-maven-plugin</artifactId>
+		    <version>1.4.4</version>
+		    <executions>
+		      <execution>
+		        <id>build-first</id>
+		          <configuration>
+		            <mainClass>com.autentia.tutoriales.WordCountTopology</mainClass>
+		            <attachToBuild>true</attachToBuild>
+		            <classifier>onejar</classifier>
+		            <filename>RunExecute.jar</filename>
+		          </configuration>
+		          <goals>
+		            <goal>one-jar</goal>
+		          </goals>
+		        </execution>
+		  
+		      </executions>
+		    </plugin>
+			<plugin>
+				<groupId>org.eclipse.xtext</groupId>
+				<artifactId>xtext-maven-plugin</artifactId>
+				<version>${xtext-version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<languages>
+						<language>
+							<javaSupport>true</javaSupport>
+							<setup>co.edu.icesi.eketal.EketalStandaloneSetupGenerated</setup>
+							<outputConfigurations>
+								<outputConfiguration>
+									<outputDirectory>src/main/generated-sources/</outputDirectory>
+								</outputConfiguration>
+							</outputConfigurations>
+						</language>
+					</languages>
+				</configuration>
+				<dependencies>
+					<dependency>
+					    <groupId>net.sf.xtext-jbase</groupId>
+					    <artifactId>jbase</artifactId>
+					    <version>0.5.0</version>
+					</dependency>
+					<dependency>
+						<groupId>co.edu.icesi.eketal</groupId>
+						<artifactId>co.edu.icesi.eketal</artifactId>
+						<version>1.0.0-SNAPSHOT</version>
+					</dependency>
+					<dependency>
+						<groupId>co.edu.icesi.eketal</groupId>
+						<artifactId>co.edu.icesi.eketal.lib</artifactId>
+						<version>1.0.0-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>com.autentia.tutoriales.WordCountTopology</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/generated-sources</directory>
+							<includes>
+								<include>**/*.java</include>
+								<include>**/*.aj</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+	</build>
+
+	<dependencies>
+            
+            
+                <dependency>
+                    <groupId>org.apache.storm</groupId>
+                    <artifactId>storm-core</artifactId>
+                    <version>1.1.0</version>
+                    <scope>provided</scope>
+                    <exclusions>
+
+                        <exclusion> 
+                            <groupId>org.slf4j</groupId>
+                            <artifactId>slf4j-log4j12</artifactId>
+                        </exclusion>
+                        <exclusion> 
+                            <groupId>log4j</groupId>
+                            <artifactId>log4j</artifactId>
+                        </exclusion>
+                    </exclusions> 
+
+
+                </dependency>
+            
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.5</version>
+</dependency>
+
+		<dependency>
+	      <groupId>org.aspectj</groupId>
+	      <artifactId>aspectjrt</artifactId>
+	      <version>1.8.9</version>
+	    </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+		<dependency>
+			<groupId>co.edu.icesi.eketal</groupId>
+			<artifactId>co.edu.icesi.eketal.lib</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-stream</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+
+
+	</dependencies>
+</project>
