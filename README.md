@@ -6,14 +6,11 @@ Este experimento tiene como objetivo replicar y posteriormente solucionar un Iss
 
 El [Issue](https://issues.apache.org/jira/browse/STORM-284 "Issue") seleccionado corresponde a un problema de *starvation*
 
-La instrumentación con Eketal actual intercepta el método execute(Tuple) de la clase TweetSplitterBolt e imprime 
+La topología de este experimento consiste en recoger streams de dos fuentes, tanto de un archivo de texto, como del api de Twitter, para así replicar el problema del Issue.
 
-------------------Reaction detected with Eketal--------------------------
-
-por consola, interceptar este método es importante, ya que gran parte de la solución propuesta tiene que ver con este método.
+Esta solución utiliza aspectos para manejar la cola de entrada antes de que la misma llegue al metodo execute(tuple) del SplitterBolt y manejar una prioridad para los streams que van llegando al mismo
 
 Actualmente este repositorio esta hecho para ser corrido en modo local, y así facilitar las pruebas
 
 Este repositorio contiene todo lo relacionado al proyecto: 
 Experimento Contador de Palabras de doble Entrada de datos Utilizando la Herramienta **Apache Storm** Basado en https://github.com/jalonsoramos/storm-word-count y https://github.com/khajaasmath786/StormTutorial y utlizando las caracterísitcas de Streaming de los mismos.
-# StormIssue
