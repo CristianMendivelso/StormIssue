@@ -21,11 +21,9 @@ public class WordCountTopology {
 
 	public static void main(String... args) throws AlreadyAliveException, InvalidTopologyException {
 		final TopologyBuilder builder = new TopologyBuilder();
-                ApplicationContext ac=new ClassPathXmlApplicationContext("applicationContext.xml");  
-                TweetSplitterBolt tweet= (TweetSplitterBolt) ac.getBean("splitter");
                 builder.setSpout("line-reader-spout", new LineReaderSpout());
 		builder.setSpout("twitterSpout", new TweetsStreamingConsumerSpout());
-                builder.setBolt("tweetSplitterBolt", tweet, 10).shuffleGrouping("twitterSpout").shuffleGrouping("line-reader-spout");
+                builder.setBolt("tweetSplitterBolt", new TweetSplitterBolt(), 10).shuffleGrouping("twitterSpout").shuffleGrouping("line-reader-spout");
 		builder.setBolt("wordCounterBolt", new WordCounterBolt(), 10).fieldsGrouping("tweetSplitterBolt", new Fields("word"));
 		builder.setBolt("countPrinterBolt", new CountPrinterBolt(), 10).fieldsGrouping("wordCounterBolt", new Fields("word"));
 
